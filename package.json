@@ -1,0 +1,11 @@
+{
+  "name": "haustier-technik-ratgeber",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

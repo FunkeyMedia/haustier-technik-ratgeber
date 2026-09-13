@@ -47,3 +47,68 @@ document.querySelectorAll('#main-nav a').forEach(link => link.addEventListener('
   header.classList.remove('open');
   menu.setAttribute('aria-expanded', 'false');
 }));
+
+const productGrid = document.querySelector('#amazon-products');
+const productStatus = document.querySelector('#product-status');
+const productCount = document.querySelector('#product-count');
+const amazonNotice = document.querySelector('#amazon-notice');
+
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text) node.textContent = text;
+  return node;
+}
+
+function renderProduct(product) {
+  const article = element('article', 'amazon-product-card');
+  const image = document.createElement('img');
+  image.src = product.image;
+  image.alt = product.title;
+  image.loading = 'lazy';
+  image.width = 500;
+  image.height = 500;
+  article.append(image);
+
+  const body = element('div', 'amazon-product-body');
+  const meta = element('p', 'amazon-product-meta', [product.brand, product.model].filter(Boolean).join(' · ') || product.category);
+  const title = element('h3', '', product.title);
+  const category = element('span', 'amazon-category', product.category);
+  const features = element('ul', 'amazon-features');
+  product.features.slice(0, 3).forEach(value => features.append(element('li', '', value)));
+  const footer = element('div', 'amazon-product-footer');
+  const price = element('strong', 'amazon-price', product.price.display);
+  const link = element('a', 'amazon-button', 'Bei Amazon ansehen ↗');
+  link.href = product.url;
+  link.target = '_blank';
+  link.rel = 'nofollow sponsored noopener';
+  link.setAttribute('aria-label', `${product.title} bei Amazon ansehen (Werbelink)`);
+  footer.append(price, link);
+  body.append(category, meta, title);
+  if (product.features.length) body.append(features);
+  body.append(footer);
+  article.append(body);
+  return article;
+}
+
+async function loadAmazonProducts() {
+  if (!productGrid) return;
+  try {
+    const response = await fetch('/api/products', { headers: { accept: 'application/json' } });
+    const data = await response.json();
+    if (!response.ok || data.status !== 'live' || !Array.isArray(data.products) || data.products.length === 0) {
+      throw new Error(data.notice || 'Keine Live-Produkte verfügbar.');
+    }
+    productGrid.replaceChildren(...data.products.map(renderProduct));
+    productStatus.hidden = true;
+    productCount.textContent = `${data.count} Live-Produkte`;
+    amazonNotice.textContent = data.notice;
+  } catch (error) {
+    productGrid.replaceChildren();
+    productStatus.className = 'product-status unavailable';
+    productStatus.textContent = 'Live-Produkte sind momentan nicht verfügbar. Es werden keine Preise aus einem früheren Abruf angezeigt.';
+    productCount.textContent = 'Live-Abruf nicht verfügbar';
+  }
+}
+
+loadAmazonProducts();

@@ -33,3 +33,25 @@
 @media (prefers-reduced-motion: reduce) {
   .decision-panel a { transition: none; }
 }
+.products { padding-top: 96px; padding-bottom: 96px; }
+.product-count { margin: 0; color: #5b6874; font-weight: 700; }
+.product-status { margin-top: 28px; padding: 18px 20px; border-radius: 14px; background: #eff9f7; color: #173e3a; display: flex; align-items: center; gap: 12px; }
+.product-status.unavailable { background: #fff4ef; color: #733629; }
+.status-spinner { width: 18px; height: 18px; border: 2px solid #78d7cd; border-top-color: #07192b; border-radius: 50%; animation: product-spin .8s linear infinite; }
+.amazon-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 34px; }
+.amazon-product-card { overflow: hidden; border: 1px solid #e3e8eb; border-radius: 20px; background: #fff; box-shadow: 0 12px 34px rgba(7,25,43,.07); display: flex; flex-direction: column; }
+.amazon-product-card > img { width: 100%; height: 240px; object-fit: contain; padding: 20px; background: #fff; box-sizing: border-box; }
+.amazon-product-body { padding: 22px; display: flex; flex: 1; flex-direction: column; }
+.amazon-category { align-self: flex-start; padding: 6px 10px; border-radius: 999px; background: #eaf8f5; color: #176158; font-size: .75rem; font-weight: 800; }
+.amazon-product-meta { margin: 16px 0 6px; color: #6a7580; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.amazon-product-card h3 { margin: 0; color: #07192b; font-family: Manrope, sans-serif; font-size: 1.08rem; line-height: 1.4; }
+.amazon-features { margin: 16px 0 20px; padding-left: 18px; color: #53606a; font-size: .88rem; line-height: 1.5; }
+.amazon-features li + li { margin-top: 6px; }
+.amazon-product-footer { margin-top: auto; padding-top: 18px; border-top: 1px solid #edf0f2; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.amazon-price { color: #07192b; font: 800 1.2rem Manrope, sans-serif; white-space: nowrap; }
+.amazon-button { padding: 11px 13px; border-radius: 10px; background: #ff735b; color: #07192b; font-size: .83rem; font-weight: 800; text-decoration: none; text-align: center; }
+.amazon-button:hover { background: #ff846f; }
+.amazon-notice { margin: 26px 0 0; color: #69747d; font-size: .82rem; line-height: 1.5; }
+@keyframes product-spin { to { transform: rotate(360deg); } }
+@media (max-width: 900px) { .amazon-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .products { padding-top: 70px; padding-bottom: 70px; } .amazon-product-grid { grid-template-columns: 1fr; } .amazon-product-card > img { height: 220px; } .amazon-product-footer { align-items: flex-start; flex-direction: column; } }
