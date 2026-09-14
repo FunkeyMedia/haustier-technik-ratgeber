@@ -61,6 +61,11 @@
 .amazon-product-footer .amazon-price { width: 100%; font-size: 1.35rem; }
 .amazon-product-footer::after { content: 'Sicher weiter zu Amazon'; width: 100%; color: #7b858d; font-size: .7rem; text-align: center; }
 .amazon-notice { margin: 26px 0 0; color: #69747d; font-size: .82rem; line-height: 1.5; }
+.product-view-controls { display: flex; gap: 9px; margin-top: 28px; }
+.product-view-controls button { border: 1px solid #d9e1e3; border-radius: 999px; background: #fff; color: #314552; padding: 10px 18px; font-weight: 800; cursor: pointer; }
+.product-view-controls button.active { border-color: #07192b; background: #07192b; color: #fff; }
+.ranking-note { max-width: 760px; margin: 13px 0 0; color: #69747d; font-size: .8rem; line-height: 1.5; }
+.product-rank { position: absolute; top: 14px; left: 14px; z-index: 1; display: grid; place-items: center; min-width: 42px; height: 42px; padding: 0 9px; border-radius: 12px; background: #07192b; color: #fff; font: 900 .82rem Manrope,sans-serif; box-shadow: 0 8px 20px rgba(7,25,43,.18); }
 
 #product-dialog { width: min(1480px, calc(100% - 40px)); max-width: none; max-height: calc(100vh - 40px); padding: 34px 38px 38px; border-radius: 0; overflow: auto; }
 .product-dialog-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 24px; border-bottom: 1px solid #dfe3df; }

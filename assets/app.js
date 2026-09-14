@@ -54,6 +54,8 @@ const productCount = document.querySelector('#product-count');
 const amazonNotice = document.querySelector('#amazon-notice');
 const productDialog = document.querySelector('#product-dialog');
 let productByAsin = new Map();
+let allProducts = [];
+let productView = 'top100';
 let galleryImages = [];
 let galleryIndex = 0;
 
@@ -64,7 +66,7 @@ function element(tag, className, text) {
   return node;
 }
 
-function renderProduct(product) {
+function renderProduct(product, rank = null) {
   const article = element('article', 'amazon-product-card');
   article.tabIndex = 0;
   article.setAttribute('role', 'button');
@@ -77,6 +79,7 @@ function renderProduct(product) {
   image.loading = 'lazy';
   image.width = 500;
   image.height = 500;
+  if (rank) imageFrame.append(element('span', 'product-rank', `#${rank}`));
   imageFrame.append(image, element('span', 'amazon-card-detail-hint', 'Details ansehen'));
   article.append(imageFrame);
 
@@ -108,6 +111,44 @@ function renderProduct(product) {
   });
   return article;
 }
+
+function rankedProducts(products) {
+  const groups = new Map();
+  products.forEach(product => {
+    if (!groups.has(product.category)) groups.set(product.category, []);
+    groups.get(product.category).push(product);
+  });
+  groups.forEach(group => group.sort((a, b) => {
+    const score = product => Math.min(product.features?.length || 0, 6) + Math.min(product.images?.length || 0, 5) + Math.min(product.details?.length || 0, 5);
+    return score(b) - score(a);
+  }));
+  const ranked = [];
+  while (ranked.length < Math.min(100, products.length)) {
+    let added = false;
+    groups.forEach(group => {
+      if (group.length && ranked.length < 100) {
+        ranked.push(group.shift());
+        added = true;
+      }
+    });
+    if (!added) break;
+  }
+  return ranked;
+}
+
+function renderProductView() {
+  const visible = productView === 'top100' ? rankedProducts(allProducts) : allProducts;
+  productGrid.replaceChildren(...visible.map((product, index) => renderProduct(product, productView === 'top100' ? index + 1 : null)));
+  productCount.textContent = productView === 'top100'
+    ? `${visible.length} Top-Produkte · ${allProducts.length} geladen`
+    : `${allProducts.length} Live-Produkte`;
+}
+
+document.querySelectorAll('[data-product-view]').forEach(button => button.addEventListener('click', () => {
+  productView = button.dataset.productView;
+  document.querySelectorAll('[data-product-view]').forEach(item => item.classList.toggle('active', item === button));
+  renderProductView();
+}));
 
 function shortFeature(value, maximumLength = 118) {
   const firstSentence = value.split(/(?<=[.!?])\s/)[0];
@@ -195,15 +236,14 @@ async function loadAmazonProducts() {
         const key = product.parentAsin || product.asin;
         if (!products.has(key) && products.size < 500) products.set(key, product);
       });
-      const current = [...products.values()];
-      productByAsin = new Map(current.map(product => [product.asin, product]));
-      productGrid.replaceChildren(...current.map(renderProduct));
-      productCount.textContent = `${current.length} Live-Produkte`;
+      allProducts = [...products.values()];
+      productByAsin = new Map(allProducts.map(product => [product.asin, product]));
+      renderProductView();
       batch += 1;
     }
     if (!products.size) throw new Error('Keine Live-Produkte verfügbar.');
     productStatus.hidden = true;
-    productCount.textContent = `${products.size} Live-Produkte`;
+    renderProductView();
     amazonNotice.textContent = notice;
   } catch (error) {
     productGrid.replaceChildren();

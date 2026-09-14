@@ -134,3 +134,12 @@ test('Partnerlinks tragen die vorgeschriebenen rel-Werte', () => {
   const script = fs.readFileSync(path.resolve(__dirname, '../assets/app.js'), 'utf8');
   assert.match(script, /nofollow sponsored noopener/);
 });
+
+test('Die Website bietet eine Top-100-Liste ohne erfundene Bewertungen', () => {
+  const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+  const script = fs.readFileSync(path.resolve(__dirname, '../assets/app.js'), 'utf8');
+  assert.match(html, /data-product-view="top100"/);
+  assert.match(script, /rankedProducts/);
+  assert.match(script, /ranked\.length < Math\.min\(100, products\.length\)/);
+  assert.doesNotMatch(html + script, /[0-5][.,]\d\s*(?:Sterne|★)/i);
+});
