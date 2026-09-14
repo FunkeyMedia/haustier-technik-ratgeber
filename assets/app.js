@@ -85,7 +85,7 @@ function renderProduct(product) {
   const title = element('h3', '', product.title);
   const category = element('span', 'amazon-category', product.category);
   const features = element('ul', 'amazon-features');
-  product.features.slice(0, 3).forEach(value => features.append(element('li', '', value)));
+  product.features.slice(0, 3).forEach(value => features.append(element('li', '', shortFeature(value, 76))));
   const footer = element('div', 'amazon-product-footer');
   const price = element('strong', 'amazon-price', product.price.display);
   const link = element('a', 'amazon-button', 'Jetzt bei Amazon ansehen ↗');
@@ -109,9 +109,9 @@ function renderProduct(product) {
   return article;
 }
 
-function shortFeature(value) {
+function shortFeature(value, maximumLength = 118) {
   const firstSentence = value.split(/(?<=[.!?])\s/)[0];
-  return firstSentence.length > 125 ? `${firstSentence.slice(0, 122).trim()}…` : firstSentence;
+  return firstSentence.length > maximumLength ? `${firstSentence.slice(0, maximumLength - 1).trim()}…` : firstSentence;
 }
 
 function showGalleryImage(index) {
@@ -126,7 +126,7 @@ function showGalleryImage(index) {
 }
 
 function openProductDialog(product) {
-  galleryImages = product.images?.length ? product.images : [product.image];
+  galleryImages = (product.images?.length ? product.images : [product.image]).slice(0, 8);
   galleryIndex = 0;
   document.querySelector('#product-dialog-brand').textContent = product.brand || 'Haustier Technik';
   document.querySelector('#product-dialog-category').textContent = product.category;
@@ -134,7 +134,7 @@ function openProductDialog(product) {
   document.querySelector('#product-dialog-price').textContent = product.price.display;
   document.querySelector('#product-dialog-availability').textContent = `✓ ${product.availability.message || 'Bei Amazon verfügbar'}`;
   const featureList = document.querySelector('#product-dialog-features');
-  featureList.replaceChildren(...product.features.map(value => element('li', '', value)));
+  featureList.replaceChildren(...product.features.slice(0, 3).map(value => element('li', '', shortFeature(value))));
 
   const facts = [
     ['Marke', product.brand],
@@ -142,7 +142,7 @@ function openProductDialog(product) {
     ['ASIN', product.asin],
     ['Eltern-ASIN', product.parentAsin],
     ...(product.details || []).map(detail => [detail.label, detail.value])
-  ].filter(([, value]) => value);
+  ].filter(([, value]) => value).slice(0, 7);
   const factList = document.querySelector('#product-dialog-facts');
   factList.replaceChildren(...facts.flatMap(([label, value]) => [element('dt', '', label), element('dd', '', value)]));
 
@@ -150,7 +150,7 @@ function openProductDialog(product) {
   amazonLink.href = product.url;
   amazonLink.setAttribute('aria-label', `${product.title} jetzt bei Amazon ansehen (Werbelink)`);
   const thumbnails = document.querySelector('#product-dialog-thumbnails');
-  thumbnails.replaceChildren(...galleryImages.map((url, index) => {
+  thumbnails.replaceChildren(...galleryImages.slice(0, 8).map((url, index) => {
     const button = element('button', 'product-thumbnail');
     button.type = 'button';
     button.setAttribute('aria-label', `Produktbild ${index + 1} anzeigen`);
