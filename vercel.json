@@ -4,7 +4,7 @@
   "trailingSlash": false,
   "functions": {
     "api/products.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   },
   "headers": [
