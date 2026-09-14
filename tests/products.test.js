@@ -26,7 +26,7 @@ function apiItem(overrides = {}) {
       title: { displayValue: 'Amazon API Testprodukt' },
       byLineInfo: { brand: { displayValue: 'Testmarke' } },
       manufactureInfo: { model: { displayValue: 'Modell X' } },
-      features: { displayValues: ['Leise Pumpe', 'Einfache Reinigung'] }
+      features: { displayValues: ['Leise Pumpe', 'Einfache Reinigung', 'Großer Wassertank'] }
     },
     offersV2: {
       listings: [{
@@ -47,6 +47,8 @@ test('1–4: nur echte ASINs, Amazon-Bilder, API-Europreise und verfügbare Ange
   assert.equal(product.price.source, 'amazon-creators-api');
   assert.equal(product.price.currency, 'EUR');
   assert.equal(AVAILABLE_TYPES.has(product.availability.type), true);
+  assert.equal(product.features.length, 3);
+  assert.equal(product.images[0], product.image);
 
   assert.equal(mapItem(apiItem({ asin: 'falsch' }), search), null);
   assert.equal(mapItem(apiItem({ images: { primary: { large: { url: 'https://example.org/image.jpg' } } } }), search), null);

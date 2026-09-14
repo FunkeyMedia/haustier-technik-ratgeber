@@ -52,6 +52,10 @@ const productGrid = document.querySelector('#amazon-products');
 const productStatus = document.querySelector('#product-status');
 const productCount = document.querySelector('#product-count');
 const amazonNotice = document.querySelector('#amazon-notice');
+const productDialog = document.querySelector('#product-dialog');
+let productByAsin = new Map();
+let galleryImages = [];
+let galleryIndex = 0;
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -62,13 +66,19 @@ function element(tag, className, text) {
 
 function renderProduct(product) {
   const article = element('article', 'amazon-product-card');
+  article.tabIndex = 0;
+  article.setAttribute('role', 'button');
+  article.setAttribute('aria-label', `${product.title}: Produktdetails öffnen`);
+  article.dataset.asin = product.asin;
+  const imageFrame = element('div', 'amazon-card-image');
   const image = document.createElement('img');
   image.src = product.image;
   image.alt = product.title;
   image.loading = 'lazy';
   image.width = 500;
   image.height = 500;
-  article.append(image);
+  imageFrame.append(image, element('span', 'amazon-card-detail-hint', 'Details ansehen'));
+  article.append(imageFrame);
 
   const body = element('div', 'amazon-product-body');
   const meta = element('p', 'amazon-product-meta', [product.brand, product.model].filter(Boolean).join(' · ') || product.category);
@@ -78,18 +88,89 @@ function renderProduct(product) {
   product.features.slice(0, 3).forEach(value => features.append(element('li', '', value)));
   const footer = element('div', 'amazon-product-footer');
   const price = element('strong', 'amazon-price', product.price.display);
-  const link = element('a', 'amazon-button', 'Bei Amazon ansehen ↗');
+  const link = element('a', 'amazon-button', 'Jetzt bei Amazon ansehen ↗');
   link.href = product.url;
   link.target = '_blank';
   link.rel = 'nofollow sponsored noopener';
   link.setAttribute('aria-label', `${product.title} bei Amazon ansehen (Werbelink)`);
+  link.addEventListener('click', event => event.stopPropagation());
   footer.append(price, link);
   body.append(category, meta, title);
   if (product.features.length) body.append(features);
   body.append(footer);
   article.append(body);
+  article.addEventListener('click', () => openProductDialog(product));
+  article.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openProductDialog(product);
+    }
+  });
   return article;
 }
+
+function shortFeature(value) {
+  const firstSentence = value.split(/(?<=[.!?])\s/)[0];
+  return firstSentence.length > 125 ? `${firstSentence.slice(0, 122).trim()}…` : firstSentence;
+}
+
+function showGalleryImage(index) {
+  if (!galleryImages.length) return;
+  galleryIndex = (index + galleryImages.length) % galleryImages.length;
+  const main = document.querySelector('#product-dialog-image');
+  main.src = galleryImages[galleryIndex];
+  document.querySelectorAll('.product-thumbnail').forEach((button, buttonIndex) => {
+    button.classList.toggle('active', buttonIndex === galleryIndex);
+    button.setAttribute('aria-current', buttonIndex === galleryIndex ? 'true' : 'false');
+  });
+}
+
+function openProductDialog(product) {
+  galleryImages = product.images?.length ? product.images : [product.image];
+  galleryIndex = 0;
+  document.querySelector('#product-dialog-brand').textContent = product.brand || 'Haustier Technik';
+  document.querySelector('#product-dialog-category').textContent = product.category;
+  document.querySelector('#product-dialog-title').textContent = product.title;
+  document.querySelector('#product-dialog-price').textContent = product.price.display;
+  document.querySelector('#product-dialog-availability').textContent = `✓ ${product.availability.message || 'Bei Amazon verfügbar'}`;
+  const featureList = document.querySelector('#product-dialog-features');
+  featureList.replaceChildren(...product.features.map(value => element('li', '', value)));
+
+  const facts = [
+    ['Marke', product.brand],
+    ['Modell', product.model],
+    ['ASIN', product.asin],
+    ['Eltern-ASIN', product.parentAsin],
+    ...product.details.map(detail => [detail.label, detail.value])
+  ].filter(([, value]) => value);
+  const factList = document.querySelector('#product-dialog-facts');
+  factList.replaceChildren(...facts.flatMap(([label, value]) => [element('dt', '', label), element('dd', '', value)]));
+
+  const amazonLink = document.querySelector('#product-dialog-amazon');
+  amazonLink.href = product.url;
+  amazonLink.setAttribute('aria-label', `${product.title} jetzt bei Amazon ansehen (Werbelink)`);
+  const thumbnails = document.querySelector('#product-dialog-thumbnails');
+  thumbnails.replaceChildren(...galleryImages.map((url, index) => {
+    const button = element('button', 'product-thumbnail');
+    button.type = 'button';
+    button.setAttribute('aria-label', `Produktbild ${index + 1} anzeigen`);
+    const thumb = document.createElement('img');
+    thumb.src = url;
+    thumb.alt = '';
+    button.append(thumb);
+    button.addEventListener('click', () => showGalleryImage(index));
+    return button;
+  }));
+  document.querySelector('.gallery-arrow.previous').hidden = galleryImages.length < 2;
+  document.querySelector('.gallery-arrow.next').hidden = galleryImages.length < 2;
+  showGalleryImage(0);
+  productDialog.showModal();
+}
+
+document.querySelector('.product-dialog-close').addEventListener('click', () => productDialog.close());
+document.querySelector('.gallery-arrow.previous').addEventListener('click', () => showGalleryImage(galleryIndex - 1));
+document.querySelector('.gallery-arrow.next').addEventListener('click', () => showGalleryImage(galleryIndex + 1));
+productDialog.addEventListener('click', event => { if (event.target === productDialog) productDialog.close(); });
 
 async function loadAmazonProducts() {
   if (!productGrid) return;
@@ -99,6 +180,7 @@ async function loadAmazonProducts() {
     if (!response.ok || data.status !== 'live' || !Array.isArray(data.products) || data.products.length === 0) {
       throw new Error(data.notice || 'Keine Live-Produkte verfügbar.');
     }
+    productByAsin = new Map(data.products.map(product => [product.asin, product]));
     productGrid.replaceChildren(...data.products.map(renderProduct));
     productStatus.hidden = true;
     productCount.textContent = `${data.count} Live-Produkte`;

@@ -236,6 +236,36 @@
     <ul id="dialog-list"></ul>
     <button class="button primary dialog-done">Verstanden</button>
   </dialog>
+  <dialog id="product-dialog" aria-labelledby="product-dialog-title">
+    <div class="product-dialog-header">
+      <strong id="product-dialog-brand"></strong>
+      <button class="product-dialog-close" aria-label="Produktansicht schließen">×</button>
+    </div>
+    <div class="product-dialog-grid">
+      <div class="product-gallery">
+        <div class="product-main-image">
+          <img id="product-dialog-image" alt="">
+          <button class="gallery-arrow previous" aria-label="Vorheriges Produktbild">‹</button>
+          <button class="gallery-arrow next" aria-label="Nächstes Produktbild">›</button>
+        </div>
+        <div class="product-thumbnails" id="product-dialog-thumbnails"></div>
+        <small>Produktbilder: Amazon · ausgewähltes Modell</small>
+      </div>
+      <div class="product-dialog-content">
+        <span class="product-dialog-category" id="product-dialog-category"></span>
+        <h2 id="product-dialog-title"></h2>
+        <strong class="product-dialog-price" id="product-dialog-price"></strong>
+        <p class="product-dialog-availability" id="product-dialog-availability"></p>
+        <div class="product-dialog-benefits">
+          <strong>Das bietet dieses Modell</strong>
+          <ul id="product-dialog-features"></ul>
+        </div>
+        <dl class="product-dialog-facts" id="product-dialog-facts"></dl>
+        <a class="product-dialog-amazon" id="product-dialog-amazon" target="_blank" rel="nofollow sponsored noopener">Jetzt bei Amazon ansehen* <span>↗</span></a>
+        <p class="product-dialog-notice">* Werbelink. Preise und Verfügbarkeit können sich ändern. Maßgeblich ist das Angebot bei Amazon zum Kaufzeitpunkt.</p>
+      </div>
+    </div>
+  </dialog>
   <script src="assets/app.js"></script>
 </body>
 </html>
