@@ -141,7 +141,7 @@ function openProductDialog(product) {
     ['Modell', product.model],
     ['ASIN', product.asin],
     ['Eltern-ASIN', product.parentAsin],
-    ...product.details.map(detail => [detail.label, detail.value])
+    ...(product.details || []).map(detail => [detail.label, detail.value])
   ].filter(([, value]) => value);
   const factList = document.querySelector('#product-dialog-facts');
   factList.replaceChildren(...facts.flatMap(([label, value]) => [element('dt', '', label), element('dd', '', value)]));
