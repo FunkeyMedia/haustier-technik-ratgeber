@@ -66,6 +66,7 @@
 .product-view-controls button.active { border-color: #07192b; background: #07192b; color: #fff; }
 .ranking-note { max-width: 760px; margin: 13px 0 0; color: #69747d; font-size: .8rem; line-height: 1.5; }
 .product-rank { position: absolute; top: 14px; left: 14px; z-index: 1; display: grid; place-items: center; min-width: 42px; height: 42px; padding: 0 9px; border-radius: 12px; background: #07192b; color: #fff; font: 900 .82rem Manrope,sans-serif; box-shadow: 0 8px 20px rgba(7,25,43,.18); }
+.product-detail-page { align-self: flex-start; margin: -5px 0 17px; color: #176158; font-size: .82rem; font-weight: 900; text-underline-offset: 4px; }
 
 #product-dialog { width: min(1480px, calc(100% - 40px)); max-width: none; max-height: calc(100vh - 40px); padding: 34px 38px 38px; border-radius: 0; overflow: auto; }
 .product-dialog-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 24px; border-bottom: 1px solid #dfe3df; }

@@ -15,6 +15,7 @@ const {
   resetCaches
 } = require('../lib/amazon');
 const handler = require('../api/products');
+const productPage = require('../api/product-page');
 
 const search = { pet: 'cat', category: 'Trinkbrunnen' };
 
@@ -142,4 +143,23 @@ test('Die Website bietet eine Top-100-Liste ohne erfundene Bewertungen', () => {
   assert.match(script, /rankedProducts/);
   assert.match(script, /ranked\.length < Math\.min\(100, products\.length\)/);
   assert.doesNotMatch(html + script, /[0-5][.,]\d\s*(?:Sterne|★)/i);
+});
+
+test('Top-Produkte verlinken individuelle SEO-Produktseiten', () => {
+  const script = fs.readFileSync(path.resolve(__dirname, '../assets/app.js'), 'utf8');
+  const vercel = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../vercel.json'), 'utf8'));
+  assert.match(script, /Ausführliche Produktseite/);
+  assert.match(script, /`\/produkt\/\$\{product\.asin\}-\$\{slug\}`/);
+  assert.equal(vercel.rewrites[0].source, '/produkt/:slug');
+});
+
+test('SEO-Produktseite enthält strukturierte Live-Produktdaten und sichere Werbelinks', () => {
+  const product = mapItem(apiItem(), search);
+  const html = productPage.page(product);
+  assert.match(html, /<title>Amazon API Testprodukt/);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(html, /39,99 €/);
+  assert.match(html, /tag=Onlinestarkei-21/);
+  assert.match(html, /rel="nofollow sponsored noopener"/);
+  assert.doesNotMatch(html, /Bewertung|Sterne|ratingValue/i);
 });

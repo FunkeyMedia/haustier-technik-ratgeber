@@ -89,6 +89,9 @@ function renderProduct(product, rank = null) {
   const category = element('span', 'amazon-category', product.category);
   const features = element('ul', 'amazon-features');
   product.features.slice(0, 3).forEach(value => features.append(element('li', '', shortFeature(value, 76))));
+  const detailPage = element('a', 'product-detail-page', 'Ausführliche Produktseite →');
+  detailPage.href = productPageUrl(product);
+  detailPage.addEventListener('click', event => event.stopPropagation());
   const footer = element('div', 'amazon-product-footer');
   const price = element('strong', 'amazon-price', product.price.display);
   const link = element('a', 'amazon-button', 'Jetzt bei Amazon ansehen ↗');
@@ -100,6 +103,7 @@ function renderProduct(product, rank = null) {
   footer.append(price, link);
   body.append(category, meta, title);
   if (product.features.length) body.append(features);
+  body.append(detailPage);
   body.append(footer);
   article.append(body);
   article.addEventListener('click', () => openProductDialog(product));
@@ -153,6 +157,11 @@ document.querySelectorAll('[data-product-view]').forEach(button => button.addEve
 function shortFeature(value, maximumLength = 118) {
   const firstSentence = value.split(/(?<=[.!?])\s/)[0];
   return firstSentence.length > maximumLength ? `${firstSentence.slice(0, maximumLength - 1).trim()}…` : firstSentence;
+}
+
+function productPageUrl(product) {
+  const slug = product.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70);
+  return `/produkt/${product.asin}-${slug}`;
 }
 
 function showGalleryImage(index) {

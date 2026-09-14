@@ -5,8 +5,17 @@
   "functions": {
     "api/products.js": {
       "maxDuration": 60
+    },
+    "api/product-page.js": {
+      "maxDuration": 15
     }
   },
+  "rewrites": [
+    {
+      "source": "/produkt/:slug",
+      "destination": "/api/product-page?slug=:slug"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
