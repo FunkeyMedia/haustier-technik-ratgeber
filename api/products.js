@@ -11,7 +11,7 @@ module.exports = async function handler(request, response) {
   response.setHeader('X-Content-Type-Options', 'nosniff');
 
   try {
-    const result = await loadProducts();
+    const result = await loadProducts(undefined, request.query?.batch);
     return response.status(200).json({
       status: 'live',
       ...result,

@@ -175,16 +175,36 @@ productDialog.addEventListener('click', event => { if (event.target === productD
 async function loadAmazonProducts() {
   if (!productGrid) return;
   try {
-    const response = await fetch('/api/products', { headers: { accept: 'application/json' } });
-    const data = await response.json();
-    if (!response.ok || data.status !== 'live' || !Array.isArray(data.products) || data.products.length === 0) {
-      throw new Error(data.notice || 'Keine Live-Produkte verfügbar.');
+    const products = new Map();
+    let batch = 0;
+    let totalBatches = 1;
+    let notice = '';
+    while (batch < totalBatches && products.size < 500) {
+      productStatus.hidden = false;
+      productStatus.className = 'product-status';
+      productStatus.lastChild.textContent = ` Live-Angebote werden geladen: ${products.size} von 500`;
+      const response = await fetch(`/api/products?batch=${batch}`, { headers: { accept: 'application/json' } });
+      const data = await response.json();
+      if (!response.ok || data.status !== 'live' || !Array.isArray(data.products)) {
+        if (products.size) break;
+        throw new Error(data.notice || 'Keine Live-Produkte verfügbar.');
+      }
+      totalBatches = Number(data.totalBatches) || 1;
+      notice = data.notice;
+      data.products.forEach(product => {
+        const key = product.parentAsin || product.asin;
+        if (!products.has(key) && products.size < 500) products.set(key, product);
+      });
+      const current = [...products.values()];
+      productByAsin = new Map(current.map(product => [product.asin, product]));
+      productGrid.replaceChildren(...current.map(renderProduct));
+      productCount.textContent = `${current.length} Live-Produkte`;
+      batch += 1;
     }
-    productByAsin = new Map(data.products.map(product => [product.asin, product]));
-    productGrid.replaceChildren(...data.products.map(renderProduct));
+    if (!products.size) throw new Error('Keine Live-Produkte verfügbar.');
     productStatus.hidden = true;
-    productCount.textContent = `${data.count} Live-Produkte`;
-    amazonNotice.textContent = data.notice;
+    productCount.textContent = `${products.size} Live-Produkte`;
+    amazonNotice.textContent = notice;
   } catch (error) {
     productGrid.replaceChildren();
     productStatus.className = 'product-status unavailable';

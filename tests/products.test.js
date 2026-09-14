@@ -6,6 +6,8 @@ const {
   ALLOWED_IMAGE_HOSTS,
   AVAILABLE_TYPES,
   PARTNER_TAG,
+  MAX_PRODUCTS,
+  REQUEST_PLAN,
   affiliateUrl,
   deduplicateVariants,
   isAmazonImage,
@@ -64,12 +66,10 @@ test('5: Farbvarianten mit derselben Eltern-ASIN werden zusammengefasst', () => 
   assert.equal(grouped[0].parentAsin, 'B087654321');
 });
 
-test('Der Serverkatalog ist für 100 Produkte aus ausreichend breiten Suchen ausgelegt', () => {
-  const source = fs.readFileSync(path.resolve(__dirname, '../lib/amazon.js'), 'utf8');
-  assert.match(source, /const MAX_PRODUCTS = 100;/);
-  assert.match(source, /\.slice\(0, MAX_PRODUCTS\)/);
-  const searchCount = (source.match(/keywords:/g) || []).length;
-  assert.equal(searchCount >= 20, true);
+test('Der Serverkatalog ist für 500 echte Produkte mit paginierten Suchen ausgelegt', () => {
+  assert.equal(MAX_PRODUCTS, 500);
+  assert.equal(REQUEST_PLAN.length >= 200, true);
+  assert.equal(REQUEST_PLAN.some(request => request.page > 1), true);
 });
 
 test('6 und 9: jeder Link führt zur ASIN auf Amazon.de und enthält exakt die festgelegte Partner-ID', () => {
