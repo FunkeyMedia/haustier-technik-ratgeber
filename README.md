@@ -16,5 +16,6 @@ Für den Live-Betrieb müssen diese geheimen Variablen im Vercel-Projekt hinterl
 
 - `AMAZON_CREATORS_CLIENT_ID`
 - `AMAZON_CREATORS_CLIENT_SECRET`
+- `AMAZON_CREATORS_PARTNER_TAG`
 
 Die Werte gehören ausschließlich in geschützte Vercel-Umgebungsvariablen oder eine lokal ignorierte `.env.local`. Ohne gültige Zugangsdaten liefert der Endpunkt eine preisfreie Ersatzdarstellung.
