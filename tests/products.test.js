@@ -163,3 +163,15 @@ test('SEO-Produktseite enthält strukturierte Live-Produktdaten und sichere Werb
   assert.match(html, /rel="nofollow sponsored noopener"/);
   assert.doesNotMatch(html, /Bewertung|Sterne|ratingValue/i);
 });
+
+test('Das Premium-Logo ist auf allen Seitentypen eingebunden', () => {
+  const home = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+  const imprint = fs.readFileSync(path.resolve(__dirname, '../impressum.html'), 'utf8');
+  const privacy = fs.readFileSync(path.resolve(__dirname, '../datenschutz.html'), 'utf8');
+  const productTemplate = fs.readFileSync(path.resolve(__dirname, '../api/product-page.js'), 'utf8');
+  for (const content of [home, imprint, privacy, productTemplate]) {
+    assert.match(content, /haustier-technik-logo-premium\.png/);
+  }
+  assert.equal(fs.statSync(path.resolve(__dirname, '../assets/haustier-technik-logo-premium.png')).size > 1000, true);
+  assert.equal(fs.statSync(path.resolve(__dirname, '../assets/haustier-technik-logo-favicon.png')).size > 1000, true);
+});
