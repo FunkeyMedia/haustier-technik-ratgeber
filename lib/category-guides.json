@@ -1,0 +1,297 @@
+{
+  "nassfutterautomaten": {
+    "title": "Nassfutterautomat für Katzen: Kühlung, Portionen & Alltag",
+    "description": "Nassfutterautomaten für Katzen vergleichen: Kühlakku oder aktive Kühlung, mehrere Katzen, Stromausfall und Reinigung. Mit Quellen und aktuellen Angeboten.",
+    "answer": "Wähle einen Nassfutterautomaten zuerst nach Kühlprinzip, nutzbarer Fachgröße und eurem Fütterungsrhythmus. Zeitsteuerung und Zugangskontrolle sind unterschiedliche Funktionen. Ein Automat unterstützt die Routine; er ersetzt keine Betreuung.",
+    "comparison": {
+      "caption": "Welches Prinzip passt zu eurem Alltag?",
+      "headers": [
+        "Variante",
+        "Kann passen, wenn …",
+        "Vor dem Kauf klären"
+      ],
+      "rows": [
+        [
+          "Fächerautomat mit Kühlakkus",
+          "du die Akkus regelmäßig einfrieren und austauschen kannst.",
+          "Wie lange reicht die Kühlung unter den angegebenen Bedingungen? Sind Ersatzakkus erhältlich?"
+        ],
+        [
+          "Automat mit aktiver Kühlung",
+          "du eine gekühlte Aufbewahrung mit Stromversorgung suchst.",
+          "Welche Temperatur erreicht genau dieses Modell? Was passiert ohne Strom?"
+        ],
+        [
+          "Napf mit Chip-Zugang",
+          "nur ein bestimmtes Tier an das Futter soll.",
+          "Hat er zusätzlich Zeitsteuerung und Kühlung? Chip-Zugang allein verspricht beides nicht."
+        ]
+      ]
+    },
+    "sections": [
+      {
+        "id": "kuehlung",
+        "title": "Kühlakku oder aktive Kühlung: Was ist der Unterschied?",
+        "paragraphs": [
+          "Ein Kühlakku wird vorher im Gefrierfach gekühlt und gibt diese Kälte nach und nach ab. Plane Platz zum Einfrieren und ein zweites Set ein, wenn du täglich wechselst. Aktive Kühlung benötigt eine laufende Energieversorgung; prüfe die angegebenen Umgebungsbedingungen und die tatsächlich erreichte Temperatur.",
+          "Ein konkretes Herstellerbeispiel: Catit beschreibt beim PIXI mit sechs Mahlzeiten zwei Kühlakkus. Im veröffentlichten Fütterungsbeispiel bleiben sie etwa sechs Stunden wirksam; der Hersteller weist auf den Einfluss der Raumtemperatur hin. Das ist keine allgemeine Haltbarkeitszusage für beliebiges Nassfutter."
+        ],
+        "source": 0
+      },
+      {
+        "id": "haltbarkeit",
+        "title": "Wie lange darf Nassfutter im Automaten bleiben?",
+        "paragraphs": [
+          "Es gibt keine verlässliche Stundenzahl für alle Geräte, Futtersorten und Wohnungen. Prüfe gemeinsam die Lagerhinweise des Futters und die Anleitung des Automaten. Anzahl der Fächer und Länge des Fütterungsplans sagen allein nichts über sichere Aufbewahrungszeiten aus.",
+          "PETLIBRO nennt für ein Polar-Modell beispielsweise eine Futtertemperatur von etwa 12 °C bei 25 °C Raumtemperatur im eigenen Labortest. Kühlung bedeutet hier also nicht automatisch dieselbe Temperatur wie im Kühlschrank. Übertrage solche Modellangaben nicht auf andere Geräte."
+        ],
+        "source": 1
+      },
+      {
+        "id": "zwei-katzen",
+        "title": "Welcher Nassfutterautomat eignet sich für zwei Katzen?",
+        "paragraphs": [
+          "Überlege zuerst, ob beide dasselbe Futter bekommen dürfen oder ob die Portionen getrennt bleiben müssen. Ein zeitgesteuert geöffnetes Fach erkennt nicht automatisch, welche Katze daraus frisst. Zwei Geräte lösen Futterklau ebenfalls nicht von selbst.",
+          "Bei verschiedenen Diäten oder einer sehr schnellen Mitfresserin ist eine echte Zugangskontrolle ein eigenes Auswahlkriterium. Frage nach kompatiblen Chips, Anlernmodus und dem Verhalten, wenn sich zwei Tiere gleichzeitig nähern. Beobachte die ersten Mahlzeiten persönlich."
+        ]
+      },
+      {
+        "id": "stromausfall",
+        "title": "Was passiert bei Stromausfall oder ohne WLAN?",
+        "paragraphs": [
+          "Prüfe drei Funktionen getrennt: Bleibt der Zeitplan gespeichert? Öffnen sich die Fächer weiter? Bleibt eine vorhandene aktive Kühlung eingeschaltet? Eine Batterie für Motor und Uhr muss keine Kühlung versorgen.",
+          "Catit nennt für den PIXI mit sechs Mahlzeiten eine Notstromversorgung über vier C/LR14-Batterien. Ob und wie eine App ohne Internet funktioniert, muss zusätzlich aus der Anleitung des konkreten Geräts hervorgehen. Teste den vorgesehenen Notbetrieb nach Herstelleranleitung, bevor du dich darauf verlässt."
+        ],
+        "source": 0
+      },
+      {
+        "id": "reinigung",
+        "title": "So prüfst du Portionen, Reinigung und Gewöhnung",
+        "paragraphs": [
+          "Miss eure tatsächliche Mahlzeit ab und vergleiche sie mit der nutzbaren Fachgröße. Kontrolliere, ob Schale, Deckel und Dichtungen ohne umständliches Werkzeug erreichbar sind und welche Teile laut Anleitung in die Spülmaschine dürfen.",
+          "Beginne mit einer beaufsichtigten Mahlzeit und vertrautem Futter. Prüfe, ob dein Tier das Öffnungsgeräusch akzeptiert und die Schale gut erreicht. Eine Ersatzschale kann den täglichen Wechsel erleichtern. Plane bei Abwesenheit weiterhin eine Person für Betreuung und Gerätekontrolle ein."
+        ]
+      }
+    ],
+    "links": [
+      [
+        "/kategorien/chip-futterautomaten",
+        "Chip-Futterautomaten für getrennte Portionen"
+      ],
+      [
+        "/kategorien/trinkbrunnen-katze",
+        "Trinkplatz und Reinigung für Katzen planen"
+      ]
+    ],
+    "sources": [
+      [
+        "Catit: PIXI Smart-Futterautomat mit sechs Mahlzeiten",
+        "https://www.catit.com/de/produkte/catit-pixi-smart-futterautomat-mit-6-mahlzeiten/"
+      ],
+      [
+        "PETLIBRO: Polar, Herstellerangaben zur Kühlung",
+        "https://petlibro.com/products/polar-smart-wet-food-feeder-for-pets"
+      ]
+    ]
+  },
+  "gps-hund": {
+    "title": "GPS-Tracker für Hunde: Abo, Reichweite & Kosten vergleichen",
+    "description": "Hundetracker richtig auswählen: GPS oder Bluetooth, Abo-Gesamtkosten, Netzabdeckung, Akkulaufzeit und Befestigung. Verständliche Kaufhilfe mit Angeboten.",
+    "answer": "Ein Hundetracker muss zu euren Wegen passen: Prüfe Ortungstechnik, Netzabdeckung, Gewicht und Gesamtkosten. Vergleiche die Akkulaufzeit im tatsächlich genutzten Modus. Ein Tracker unterstützt die Suche, garantiert aber nicht, dass ein entlaufener Hund sofort gefunden wird.",
+    "comparison": {
+      "caption": "Ortungstechniken richtig unterscheiden",
+      "headers": [
+        "Technik",
+        "Wofür sie gedacht ist",
+        "Wichtige Grenze"
+      ],
+      "rows": [
+        [
+          "GPS mit Mobilfunk",
+          "Standort aus der Ferne an eine App übertragen.",
+          "Benötigt geeigneten Satellitenempfang und eine verfügbare Mobilfunkverbindung."
+        ],
+        [
+          "Bluetooth-Suchhilfe",
+          "Gegenstände in der Nähe oder über ein kompatibles Gerätenetz wiederfinden.",
+          "Nicht mit unabhängiger, kontinuierlicher GPS-Liveortung gleichsetzen."
+        ],
+        [
+          "Funkortung mit eigenem Empfänger",
+          "Ortung innerhalb der Möglichkeiten des jeweiligen Funksystems.",
+          "Reichweite, Gelände, Empfängerpreis und Zulässigkeit des konkreten Systems prüfen."
+        ]
+      ]
+    },
+    "sections": [
+      {
+        "id": "abo",
+        "title": "GPS-Tracker für Hunde ohne Abo: Worauf achten?",
+        "paragraphs": [
+          "„Ohne Abo“ beschreibt das Bezahlmodell, nicht die Ortungsqualität. Prüfe, ob tatsächlich GPS verwendet wird, wie der Standort auf dein Handy gelangt und ob eine eigene SIM-Karte oder ein separater Empfänger benötigt wird. Auch eine eigene SIM kann laufende Kosten verursachen.",
+          "Bei Tractive wird die integrierte SIM-Karte durch ein Abonnement aktiviert. Der Hersteller beschreibt GPS und Mobilfunk als Grundlage der Fernortung. Übertrage diese Funktionsweise nicht ungeprüft auf alle als Hundetracker angebotenen Produkte."
+        ],
+        "source": 0
+      },
+      {
+        "id": "kosten",
+        "title": "Was kostet ein Hundetracker über zwei Jahre?",
+        "paragraphs": [
+          "Vergleiche Gerätepreis + verpflichtende Einmalgebühren + alle innerhalb von 24 Monaten fälligen Abozahlungen + benötigte Halterungen. Wenn ein Tarif jährlich im Voraus bezahlt wird, rechne mit zwei Jahreszahlungen. Prüfe außerdem Mindestlaufzeit, Verlängerung und Kündigung.",
+          "Rechenbeispiel mit frei gewählten Werten, kein Angebot: 50 € für das Gerät plus 2 × 72 € Jahresabo plus 10 € Halterung ergeben 204 € in zwei Jahren. Bei 90 € Gerätepreis und 2 × 48 € Jahresabo sind es 186 €. Ein günstigeres Gerät kann insgesamt teurer sein. Preise und Vertragsbedingungen immer aktuell beim Anbieter prüfen."
+        ]
+      },
+      {
+        "id": "reichweite",
+        "title": "Funktioniert ein GPS-Tracker im Wald und im Ausland?",
+        "paragraphs": [
+          "Eine große beworbene Reichweite hebt Empfangsgrenzen nicht auf. Tractive nennt sowohl GPS-Empfang als auch Mobilfunkabdeckung als Voraussetzungen für die Ortung. Prüfe für euer Reiseziel die unterstützten Länder und den erforderlichen Tarif.",
+          "Teste vor dem ersten wichtigen Einsatz eine bekannte Strecke mit dem angeleinten Hund: Wann kommen Updates an, und wo fehlen sie? Notiere Empfangslücken. Das liefert einen praktischen Eindruck für eure Wege, keine Garantie für jeden späteren Notfall."
+        ],
+        "source": 1
+      },
+      {
+        "id": "akku",
+        "title": "Welche Akkulaufzeit ist für Live-Tracking realistisch?",
+        "paragraphs": [
+          "Vergleiche immer denselben Betriebsmodus. Eine maximale Standby- oder Energiespar-Laufzeit ist nicht mit dauernder Live-Ortung gleichzusetzen. Tractive nennt Netzabdeckung, GPS-Empfang und die Nutzung von Live-Tracking als Einflussfaktoren.",
+          "Frage nach Laufzeitangaben ohne häusliche Energiesparzone und plane eine feste Laderoutine. Prüfe auch, wie verständlich die App einen niedrigen Ladestand anzeigt und ob das Gerät während des Ladens getragen werden kann."
+        ],
+        "source": 2
+      },
+      {
+        "id": "befestigung",
+        "title": "Wie wähle ich Gewicht und Befestigung passend zum Hund?",
+        "paragraphs": [
+          "Vergleiche das Gesamtgewicht einschließlich Halterung sowie die freigegebene Halsband- oder Geschirrbreite. Eine kleine Produktabbildung sagt wenig über den Sitz am Hund aus. Halterungen und Größenempfehlungen können sich zwischen Modellgenerationen unterscheiden.",
+          "Kontrolliere nach dem Anbringen, ob der Tracker scheuert, frei pendelt oder leicht abgestreift werden kann. Beachte die Montageanleitung. Ein Tracker ersetzt weder die sichere Führung noch Kennzeichnung und Registrierung deines Tieres."
+        ]
+      }
+    ],
+    "links": [
+      [
+        "/kategorien/gps-katze",
+        "Tracker für Katzen: andere Anforderungen an Gewicht und Halsband"
+      ],
+      [
+        "https://hundefutter-finder.vercel.app/sortiment/geschirre",
+        "Geschirre und passende Größen vergleichen"
+      ],
+      [
+        "https://hundefutter-finder.vercel.app/sortiment/leinen",
+        "Leinen für gemeinsame Spaziergänge"
+      ]
+    ],
+    "sources": [
+      [
+        "Tractive: Funktionsweise und integrierte SIM",
+        "https://help.tractive.com/hc/en-us/articles/205663101-How-does-it-work-How-can-I-find-my-pet-with-a-Tractive-tracker"
+      ],
+      [
+        "Tractive: Funktionen und Empfangsvoraussetzungen",
+        "https://help.tractive.com/hc/en-us/articles/360001234789-What-features-does-Tractive-offer"
+      ],
+      [
+        "Tractive: Einflussfaktoren auf die Akkulaufzeit",
+        "https://help.tractive.com/hc/en-us/articles/205664001-How-long-does-my-tracker-s-battery-last"
+      ]
+    ]
+  },
+  "trinkbrunnen-hund": {
+    "title": "Trinkbrunnen für Hunde: Reinigung, Filter & Auswahl",
+    "description": "Trinkbrunnen für Hunde vergleichen: Napf oder Brunnen, Reinigung der Pumpe, Filterkosten, Mindestfüllstand und Stromausfall. Mit praktischer Checkliste.",
+    "answer": "Ein Trinkbrunnen ist eine mögliche zusätzliche Wasserstelle. Wichtiger als App und Beleuchtung sind eine passende Trinkfläche, leicht zu reinigende Teile und verfügbare Ersatzfilter. Ob dein Hund ihn annimmt, zeigt sich erst im Alltag.",
+    "comparison": {
+      "caption": "Napf oder Trinkbrunnen: Was passt zu euch?",
+      "headers": [
+        "Wasserstelle",
+        "Alltag",
+        "Prüffrage"
+      ],
+      "rows": [
+        [
+          "Klassischer Wassernapf",
+          "Einfacher Aufbau ohne Pumpe oder Strom.",
+          "Erreicht dein Hund das Wasser gut und steht der Napf stabil?"
+        ],
+        [
+          "Trinkbrunnen",
+          "Zusätzliche Wasserbewegung; Pumpe und Filter benötigen Pflege.",
+          "Kannst du alle wasserführenden Teile regelmäßig reinigen?"
+        ],
+        [
+          "Reisenapf mit Flasche",
+          "Wasser bei Spaziergängen selbst mitnehmen.",
+          "Reichen Volumen und Reserve für eure Strecke?"
+        ]
+      ]
+    },
+    "sections": [
+      {
+        "id": "reinigung",
+        "title": "Wie reinige ich einen Trinkbrunnen für Hunde?",
+        "paragraphs": [
+          "Trenne das Gerät vor dem Zerlegen vom Strom und halte dich an seine Anleitung. Reinige nicht nur die sichtbare Schale: Pumpe, Ansaugung, Schläuche und Dichtungen können eigene Pflegeschritte benötigen. Spüle Reinigungsmittel gründlich ab.",
+          "PetSafe verlangt beispielsweise beim Outdoor Dog Fountain eine Reinigung von Brunnen und Pumpe alle ein bis zwei Wochen. Manche Teile dürfen ausdrücklich nicht in die Spülmaschine. Diese Vorgaben gelten für dieses Modell; übernimm sie nicht pauschal für einen anderen Brunnen."
+        ],
+        "source": 0
+      },
+      {
+        "id": "filter",
+        "title": "Wie oft muss ich den Filter wechseln und was kostet das?",
+        "paragraphs": [
+          "Nutze die genaue Modellnummer des Brunnens, nicht nur den Markennamen. Ein passend aussehender Filter kann andere Maße oder Materialien haben. Wechselintervalle hängen vom Gerät und den Nutzungsbedingungen ab. Ein Filter ersetzt nicht das Säubern des Brunnens.",
+          "Für eine einfache Kostenübersicht: Preis je Filter × geplante Wechsel pro Jahr. Frei gewähltes Rechenbeispiel: 3 € je Filter und 13 Wechsel ergeben 39 € jährlich, zuzüglich möglicher weiterer Filter und Strom. Das ist weder ein aktuelles Angebot noch eine Empfehlung für ein bestimmtes Wechselintervall."
+        ]
+      },
+      {
+        "id": "strom",
+        "title": "Hat mein Hund bei Stromausfall noch Wasser?",
+        "paragraphs": [
+          "Das hängt vom Aufbau ab. Prüfe, ob ohne laufende Pumpe Wasser in einer erreichbaren Schale bleibt oder nur im Tank steht. Achte außerdem auf Mindestfüllstand und die Herstellerangaben zum Trockenlaufschutz.",
+          "Stelle zusätzlich einen gewöhnlichen Wassernapf bereit. Plane beim Reinigen und bei einem Pumpenausfall eine verfügbare Ersatzwasserstelle ein."
+        ]
+      },
+      {
+        "id": "gewoehnung",
+        "title": "Was tun, wenn mein Hund den Trinkbrunnen nicht annimmt?",
+        "paragraphs": [
+          "Lass den gewohnten Napf stehen und biete den Brunnen in ruhiger Umgebung als Alternative an. Beobachte Abstand, Trinkhöhe und Reaktion auf das Pumpengeräusch. Dränge den Hund nicht an das Gerät.",
+          "Trinkt er plötzlich weniger als sonst oder wirkt krank, gehört das in die Tierarztpraxis. Ein anderes Gerät ist keine Behandlung. Unser verlinkter Trinkratgeber erklärt allgemeine Schritte und Warnzeichen."
+        ],
+        "source": 1
+      },
+      {
+        "id": "check",
+        "title": "Fünf Dinge, die du vor dem Kauf prüfen kannst",
+        "paragraphs": [
+          "1. Trinkfläche und Standfestigkeit passend zur Größe deines Hundes.\n2. Vollständig erreichbare Pumpe und Wasserwege.\n3. Genaue Filterbezeichnung und verfügbare Ersatzteile.\n4. Erreichbares Wasser bei Stromausfall.\n5. Herstelleranleitung zu Reinigung, Füllstand und Pumpenpflege."
+        ]
+      }
+    ],
+    "links": [
+      [
+        "https://hundefutter-finder.vercel.app/ratgeber/hund-trinkt-zu-wenig",
+        "Mein Hund trinkt zu wenig: Tipps, Gurkenwasser und Warnzeichen"
+      ],
+      [
+        "https://hundefutter-finder.vercel.app/sortiment/naepfe",
+        "Klassische Wassernäpfe vergleichen"
+      ],
+      [
+        "/kategorien/ersatzfilter",
+        "Passende Ersatzfilter finden"
+      ]
+    ],
+    "sources": [
+      [
+        "PetSafe: Outdoor Dog Fountain reinigen",
+        "https://support.petsafe.net/articles/how-to-disassemble-and-clean-my-petsafe-outdoor-dog-fountain/"
+      ],
+      [
+        "Vets Now: Dehydration bei Hunden",
+        "https://www.vets-now.com/pet-care-advice/dehydration-in-dogs/"
+      ]
+    ]
+  }
+}
