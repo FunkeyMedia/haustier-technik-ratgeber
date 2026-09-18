@@ -1,4 +1,5 @@
-const { loadProducts } = require('../lib/amazon');
+const { parseRequest, loadCategory } = require('../lib/catalog');
+const load = loadCategory();
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'GET') {
@@ -10,8 +11,13 @@ module.exports = async function handler(request, response) {
   response.setHeader('Cache-Control', 'public, s-maxage=1800, max-age=0');
   response.setHeader('X-Content-Type-Options', 'nosniff');
 
+  let query;
+  try { query = parseRequest(request.query); } catch {
+    response.setHeader('Cache-Control', 'no-store');
+    return response.status(400).json({error: 'Ungültige Kategorie, Tierauswahl oder Seite.'});
+  }
   try {
-    const result = await loadProducts(undefined, request.query?.batch);
+    const result = await load(query);
     return response.status(200).json({
       status: 'live',
       ...result,

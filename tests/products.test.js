@@ -6,8 +6,6 @@ const {
   ALLOWED_IMAGE_HOSTS,
   AVAILABLE_TYPES,
   PARTNER_TAG,
-  MAX_PRODUCTS,
-  REQUEST_PLAN,
   affiliateUrl,
   deduplicateVariants,
   isAmazonImage,
@@ -65,12 +63,6 @@ test('5: Farbvarianten mit derselben Eltern-ASIN werden zusammengefasst', () => 
   const grouped = deduplicateVariants([first, second]);
   assert.equal(grouped.length, 1);
   assert.equal(grouped[0].parentAsin, 'B087654321');
-});
-
-test('Der Serverkatalog ist für 500 echte Produkte mit paginierten Suchen ausgelegt', () => {
-  assert.equal(MAX_PRODUCTS, 500);
-  assert.equal(REQUEST_PLAN.length >= 200, true);
-  assert.equal(REQUEST_PLAN.some(request => request.page > 1), true);
 });
 
 test('6 und 9: jeder Link führt zur ASIN auf Amazon.de und enthält exakt die festgelegte Partner-ID', () => {
@@ -136,20 +128,18 @@ test('Partnerlinks tragen die vorgeschriebenen rel-Werte', () => {
   assert.match(script, /nofollow sponsored noopener/);
 });
 
-test('Die Website bietet eine Top-100-Liste ohne erfundene Bewertungen', () => {
+test('Kategorieauswahl ersetzt unbewiesene Ranglisten', () => {
   const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
   const script = fs.readFileSync(path.resolve(__dirname, '../assets/app.js'), 'utf8');
-  assert.match(html, /data-product-view="top100"/);
-  assert.match(script, /rankedProducts/);
-  assert.match(script, /ranked\.length < Math\.min\(100, products\.length\)/);
-  assert.doesNotMatch(html + script, /[0-5][.,]\d\s*(?:Sterne|★)/i);
+  assert.match(html, /id="product-category"/);
+  assert.doesNotMatch(html + script, /Top 100|von 500|data-product-view|[0-5][.,]\d\s*(?:Sterne|★)/i);
 });
 
 test('Top-Produkte verlinken individuelle SEO-Produktseiten', () => {
   const script = fs.readFileSync(path.resolve(__dirname, '../assets/app.js'), 'utf8');
   const vercel = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../vercel.json'), 'utf8'));
   assert.match(script, /Ausführliche Produktseite/);
-  assert.match(script, /`\/produkt\/\$\{product\.asin\}-\$\{slug\}`/);
+  assert.match(script, /`\/produkt\/\$\{product\.asin\}`/);
   assert.equal(vercel.rewrites[0].source, '/produkt/:slug');
 });
 
@@ -174,4 +164,13 @@ test('Das Premium-Logo ist auf allen Seitentypen eingebunden', () => {
   }
   assert.equal(fs.statSync(path.resolve(__dirname, '../assets/haustier-technik-logo-premium.png')).size > 1000, true);
   assert.equal(fs.statSync(path.resolve(__dirname, '../assets/haustier-technik-logo-favicon.png')).size > 1000, true);
+});
+test('LEADTIME does not claim in-stock or preorder availability in product schema',()=>{
+ const product=mapItem(apiItem(),search);
+ product.availability.type='LEADTIME';
+ const html=productPage.page(product);
+ const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)[1]);
+ assert.equal(schema.offers.availability,undefined);
+ product.availability.type='IN_STOCK';
+ assert.match(productPage.page(product),/https:\/\/schema.org\/InStock/);
 });

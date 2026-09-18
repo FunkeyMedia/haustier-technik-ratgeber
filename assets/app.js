@@ -1,3 +1,10 @@
+function toggleComparison(selected, product) {
+  if (selected.some(item => item.asin === product.asin)) return selected.filter(item => item.asin !== product.asin);
+  return selected.length < 3 ? [...selected, product] : selected;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { toggleComparison };
+} else {
 const filters = document.querySelectorAll('[data-filter]');
 const cards = document.querySelectorAll('.guide-card');
 const filterButtons = document.querySelectorAll('.filter button');
@@ -15,31 +22,9 @@ function setFilter(value, shouldScroll = false) {
 
 filters.forEach(button => button.addEventListener('click', () => setFilter(button.dataset.filter, button.classList.contains('filter-trigger'))));
 
-const guides = {
-  litter: ['Katzenklo-Roboter', 'Achte zuerst darauf, dass deine Katze bequem hineinpasst und das Gerät sie beim Reinigen zuverlässig erkennt.', ['Innenmaß und Einstiegshöhe', 'Sicherheits-Sensoren und manueller Stopp', 'Reinigung der Trommel und Geruchsfilter', 'Geeignete Streu und laufende Kosten']],
-  gps: ['GPS-Tracker', 'Im Ernstfall zählen eine präzise Ortung und eine stabile Verbindung mehr als eine lange Liste von Extras.', ['Live-Ortung und Aktualisierungsintervall', 'Mobilfunk-Abdeckung und Abo-Kosten', 'Akkulaufzeit im realen Gebrauch', 'Gewicht, Wasserdichtigkeit und Befestigung']],
-  feeder: ['Futterautomaten', 'Die passende Portionierung und ein hygienischer Aufbau sind wichtiger als App-Spielereien.', ['Fachgröße und Portionsgenauigkeit', 'Ausfallsicherung bei Stromunterbrechung', 'Leicht entnehmbare, spülbare Teile', 'Chip-Erkennung bei mehreren Tieren']],
-  fountain: ['Trinkbrunnen', 'Ein guter Brunnen ist leise, leicht zu reinigen und hat gut verfügbare Ersatzfilter.', ['Lautstärke der Pumpe', 'Material und spülbare Bauteile', 'Filterpreis und Verfügbarkeit', 'Füllstandsanzeige und Trockenlaufschutz']],
-  camera: ['Tierkameras', 'Eine Kamera sollte klare Bilder liefern, ohne deine Privatsphäre oder Ruhe mit unnötigen Meldungen zu belasten.', ['Nachtsicht und Bildwinkel', 'Lokale Speicherung oder sichere Cloud', 'Gezielte Bewegungs- und Geräuscherkennung', 'Abschaltbarer Kameramodus zu Hause']],
-  flap: ['Mikrochip-Katzenklappen', 'Prüfe vor dem Kauf Chip-Kompatibilität, Einbauort und die Zahl speicherbarer Tiere.', ['Kompatible Mikrochip-Standards', 'Wand-, Glas- oder Türeinbau', 'Selektive Ein- und Ausgangsregeln', 'Batterielaufzeit und Warnanzeige']],
-  care: ['Fellpflege-Systeme', 'Geräusch, Saugstärke und ein passender Aufsatz entscheiden, ob dein Hund die Pflege entspannt akzeptiert.', ['Lautstärke auf niedriger Stufe', 'Aufsätze passend zu Felltyp und Größe', 'Regelbare Saugkraft', 'Reinigung und Ersatzfilter']],
-  ball: ['Automatische Ballwerfer', 'Das Gerät sollte kontrolliertes gemeinsames Spiel unterstützen und sichere Pausen ermöglichen.', ['Passende Ballgröße ohne Verschluckrisiko', 'Einstellbare, sichere Wurfdistanz', 'Pausenfunktion gegen Überforderung', 'Standfestigkeit und leichte Reinigung']]
-};
-const dialog = document.querySelector('#guide-dialog');
-document.querySelectorAll('[data-guide]').forEach(button => button.addEventListener('click', () => {
-  const [title, intro, items] = guides[button.dataset.guide];
-  document.querySelector('#dialog-title').textContent = title;
-  document.querySelector('#dialog-intro').textContent = intro;
-  document.querySelector('#dialog-list').innerHTML = items.map(item => `<li>${item}</li>`).join('');
-  dialog.showModal();
-}));
-document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-document.querySelector('.dialog-done').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
-
 const header = document.querySelector('.site-header');
 const menu = document.querySelector('.menu-button');
-menu.addEventListener('click', () => {
+menu?.addEventListener('click', () => {
   const open = header.classList.toggle('open');
   menu.setAttribute('aria-expanded', String(open));
 });
@@ -53,11 +38,62 @@ const productStatus = document.querySelector('#product-status');
 const productCount = document.querySelector('#product-count');
 const amazonNotice = document.querySelector('#amazon-notice');
 const productDialog = document.querySelector('#product-dialog');
-let productByAsin = new Map();
 let allProducts = [];
-let productView = 'top100';
 let galleryImages = [];
 let galleryIndex = 0;
+let comparedProducts = [];
+const comparisonPanel = element('section', 'comparison-panel-products');
+comparisonPanel.setAttribute('aria-label', 'Produktvergleich');
+const comparisonStatus = element('p', 'comparison-status', 'Wähle bis zu drei Produkte zum Vergleich aus.');
+comparisonStatus.setAttribute('role', 'status');
+const comparisonTable = element('div', 'comparison-table-wrap');
+comparisonPanel.append(comparisonStatus, comparisonTable);
+productGrid.before(comparisonPanel);
+function renderComparison() {
+  comparisonStatus.textContent = comparedProducts.length ? `${comparedProducts.length} von 3 Produkten ausgewählt. Verglichen werden nur die angegebenen Produktdaten.` : 'Wähle bis zu drei Produkte zum Vergleich aus.';
+  comparisonTable.replaceChildren();
+  productGrid.querySelectorAll('.compare-product').forEach(button => {
+    const selected = comparedProducts.some(p => p.asin === button.dataset.asin);
+    button.setAttribute('aria-pressed', String(selected));
+    button.textContent = selected ? 'Aus Vergleich entfernen' : 'Zum Vergleich hinzufügen';
+    button.disabled = !selected && comparedProducts.length >= 3;
+  });
+  if (!comparedProducts.length) return;
+  const table = element('table');
+  const caption = element('caption', '', 'Produktdaten im Vergleich');
+  table.append(caption);
+  const head = element('thead');
+  const heading = element('tr');
+  const field = element('th', '', 'Merkmal');
+  field.scope = 'col';
+  heading.append(field);
+  comparedProducts.forEach(product => {
+    const th = element('th');
+    th.scope = 'col';
+    const link = element('a', '', product.title);
+    link.href = productPageUrl(product);
+    const remove = element('button', 'comparison-remove', 'Entfernen');
+    remove.type = 'button';
+    remove.setAttribute('aria-label', `${product.title} aus Vergleich entfernen`);
+    remove.addEventListener('click', () => {
+      comparedProducts = toggleComparison(comparedProducts, product);
+      renderComparison();
+      comparisonStatus.focus();
+    });
+    th.append(link, remove);
+    heading.append(th);
+  });
+  head.append(heading);table.append(head);
+  const body = element('tbody');
+  for (const [label, value] of [['Preis', p => p.price?.display], ['Marke', p => p.brand], ['Modell', p => p.model]]) {
+    const row = element('tr');
+    const th = element('th', '', label);th.scope = 'row';row.append(th);
+    comparedProducts.forEach(product => row.append(element('td', '', value(product) || 'Nicht angegeben')));
+    body.append(row);
+  }
+  table.append(body);comparisonTable.append(table);
+}
+comparisonStatus.tabIndex = -1;
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -68,11 +104,10 @@ function element(tag, className, text) {
 
 function renderProduct(product, rank = null) {
   const article = element('article', 'amazon-product-card');
-  article.tabIndex = 0;
-  article.setAttribute('role', 'button');
-  article.setAttribute('aria-label', `${product.title}: Produktdetails öffnen`);
   article.dataset.asin = product.asin;
-  const imageFrame = element('div', 'amazon-card-image');
+  const imageFrame = element('a', 'amazon-card-image');
+  imageFrame.href = productPageUrl(product);
+  imageFrame.setAttribute('aria-label', `${product.title}: Produktdetails öffnen`);
   const image = document.createElement('img');
   image.src = product.image;
   image.alt = product.title;
@@ -85,7 +120,10 @@ function renderProduct(product, rank = null) {
 
   const body = element('div', 'amazon-product-body');
   const meta = element('p', 'amazon-product-meta', [product.brand, product.model].filter(Boolean).join(' · ') || product.category);
-  const title = element('h3', '', product.title);
+  const title = element('h3');
+  const titleLink = element('a', '', product.title);
+  titleLink.href = productPageUrl(product);
+  title.append(titleLink);
   const category = element('span', 'amazon-category', product.category);
   const features = element('ul', 'amazon-features');
   product.features.slice(0, 3).forEach(value => features.append(element('li', '', shortFeature(value, 76))));
@@ -103,56 +141,71 @@ function renderProduct(product, rank = null) {
   footer.append(price, link);
   body.append(category, meta, title);
   if (product.features.length) body.append(features);
-  body.append(detailPage);
+  const compare = element('button', 'compare-product', comparedProducts.some(p => p.asin === product.asin) ? 'Aus Vergleich entfernen' : 'Zum Vergleich hinzufügen');
+  compare.type = 'button';
+  compare.dataset.asin = product.asin;
+  compare.setAttribute('aria-label', `${product.title}: zum Vergleich auswählen`);
+  compare.setAttribute('aria-pressed', String(comparedProducts.some(p => p.asin === product.asin)));
+  compare.addEventListener('click', event => {
+    event.stopPropagation();
+    if (expireOffers()) return;
+    comparedProducts = toggleComparison(comparedProducts, product);
+    renderComparison();
+  });
+  body.append(detailPage, compare);
   body.append(footer);
   article.append(body);
-  article.addEventListener('click', () => openProductDialog(product));
-  article.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openProductDialog(product);
-    }
-  });
+  const preview = element('button', 'product-preview', 'Bilder & Kurzansicht');
+  preview.type = 'button';
+  preview.addEventListener('click', () => openProductDialog(product));
+  body.insertBefore(preview, detailPage);
   return article;
 }
 
-function rankedProducts(products) {
-  const groups = new Map();
-  products.forEach(product => {
-    if (!groups.has(product.category)) groups.set(product.category, []);
-    groups.get(product.category).push(product);
-  });
-  groups.forEach(group => group.sort((a, b) => {
-    const score = product => Math.min(product.features?.length || 0, 6) + Math.min(product.images?.length || 0, 5) + Math.min(product.details?.length || 0, 5);
-    return score(b) - score(a);
-  }));
-  const ranked = [];
-  while (ranked.length < Math.min(100, products.length)) {
-    let added = false;
-    groups.forEach(group => {
-      if (group.length && ranked.length < 100) {
-        ranked.push(group.shift());
-        added = true;
-      }
-    });
-    if (!added) break;
-  }
-  return ranked;
-}
-
-function renderProductView() {
-  const visible = productView === 'top100' ? rankedProducts(allProducts) : allProducts;
-  productGrid.replaceChildren(...visible.map((product, index) => renderProduct(product, productView === 'top100' ? index + 1 : null)));
-  productCount.textContent = productView === 'top100'
-    ? `${visible.length} Top-Produkte · ${allProducts.length} geladen`
-    : `${allProducts.length} Live-Produkte`;
-}
-
-document.querySelectorAll('[data-product-view]').forEach(button => button.addEventListener('click', () => {
-  productView = button.dataset.productView;
-  document.querySelectorAll('[data-product-view]').forEach(item => item.classList.toggle('active', item === button));
+const categoryControl = document.querySelector('#product-category');
+const petControl = document.querySelector('#product-pet');
+const sortControl = document.querySelector('#product-sort');
+const moreButton = document.querySelector('#load-more');
+let currentPage = 0;
+let generation = 0;
+let requestController;
+let expiryTimer;
+let expiresAt = Infinity;
+let needsRefresh = false;
+function expireOffers() {
+  if (Date.now() < expiresAt) return false;
+  requestController?.abort();
+  generation += 1;
+  allProducts = [];
+  comparedProducts = [];
+  currentPage = 0;
+  needsRefresh = true;
+  productDialog.close();
+  document.querySelector('#product-dialog-image').removeAttribute('src');
+  document.querySelector('#product-dialog-thumbnails').replaceChildren();
+  document.querySelector('#product-dialog-price').textContent = '';
   renderProductView();
-}));
+  productStatus.hidden = false;
+  productStatus.textContent = 'Diese Angebote sind nicht mehr aktuell. Lade Preise und Bilder erneut, um weiter zu vergleichen.';
+  moreButton.hidden = false;
+  moreButton.disabled = false;
+  moreButton.textContent = 'Aktuelle Angebote laden';
+  productGrid.setAttribute('aria-busy', 'false');
+  return true;
+}
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && allProducts.length) expireOffers();
+});
+function renderProductView() {
+  const visible = selectProducts(allProducts, petControl.value, sortControl.value);
+  productGrid.replaceChildren(...visible.map(product => renderProduct(product)));
+  productCount.textContent = `${visible.length} Angebote angezeigt · ${allProducts.length} geladen`;
+  renderComparison();
+}
+categoryControl.addEventListener('change', () => loadAmazonProducts(true));
+petControl.addEventListener('change', () => loadAmazonProducts(true));
+sortControl.addEventListener('change', renderProductView);
+moreButton.addEventListener('click', () => loadAmazonProducts(needsRefresh));
 
 function shortFeature(value, maximumLength = 118) {
   const firstSentence = value.split(/(?<=[.!?])\s/)[0];
@@ -160,8 +213,7 @@ function shortFeature(value, maximumLength = 118) {
 }
 
 function productPageUrl(product) {
-  const slug = product.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70);
-  return `/produkt/${product.asin}-${slug}`;
+  return `/produkt/${product.asin}`;
 }
 
 function showGalleryImage(index) {
@@ -176,6 +228,7 @@ function showGalleryImage(index) {
 }
 
 function openProductDialog(product) {
+  if (expireOffers()) return;
   galleryImages = (product.images?.length ? product.images : [product.image]).slice(0, 8);
   galleryIndex = 0;
   document.querySelector('#product-dialog-brand').textContent = product.brand || 'Haustier Technik';
@@ -222,44 +275,61 @@ document.querySelector('.gallery-arrow.previous').addEventListener('click', () =
 document.querySelector('.gallery-arrow.next').addEventListener('click', () => showGalleryImage(galleryIndex + 1));
 productDialog.addEventListener('click', event => { if (event.target === productDialog) productDialog.close(); });
 
-async function loadAmazonProducts() {
+async function loadAmazonProducts(reset = true) {
   if (!productGrid) return;
-  try {
-    const products = new Map();
-    let batch = 0;
-    let totalBatches = 1;
-    let notice = '';
-    while (batch < totalBatches && products.size < 500) {
-      productStatus.hidden = false;
-      productStatus.className = 'product-status';
-      productStatus.lastChild.textContent = ` Live-Angebote werden geladen: ${products.size} von 500`;
-      const response = await fetch(`/api/products?batch=${batch}`, { headers: { accept: 'application/json' } });
-      const data = await response.json();
-      if (!response.ok || data.status !== 'live' || !Array.isArray(data.products)) {
-        if (products.size) break;
-        throw new Error(data.notice || 'Keine Live-Produkte verfügbar.');
-      }
-      totalBatches = Number(data.totalBatches) || 1;
-      notice = data.notice;
-      data.products.forEach(product => {
-        const key = product.parentAsin || product.asin;
-        if (!products.has(key) && products.size < 500) products.set(key, product);
-      });
-      allProducts = [...products.values()];
-      productByAsin = new Map(allProducts.map(product => [product.asin, product]));
-      renderProductView();
-      batch += 1;
-    }
-    if (!products.size) throw new Error('Keine Live-Produkte verfügbar.');
-    productStatus.hidden = true;
+  if (reset) {
+    clearTimeout(expiryTimer);
+    expiresAt = Infinity;
+    needsRefresh = false;
+    requestController?.abort();
+    generation += 1;
+    currentPage = 0;
+    allProducts = [];
+    comparedProducts = [];
     renderProductView();
-    amazonNotice.textContent = notice;
+  }
+  const ownGeneration = generation;
+  const nextPage = currentPage + 1;
+  requestController = new AbortController();
+  moreButton.disabled = true;
+  productGrid.setAttribute('aria-busy', 'true');
+  productStatus.hidden = false;
+  productStatus.className = 'product-status';
+  productStatus.textContent = 'Passende Angebote werden geladen …';
+  try {
+    const query = new URLSearchParams({category: categoryControl.value, pet: petControl.value, page: String(nextPage)});
+    const response = await fetch(`/api/products?${query}`, {headers:{accept:'application/json'},signal:requestController.signal});
+    const data = await response.json();
+    if (ownGeneration !== generation) return;
+    if (!response.ok || data.status !== 'live' || !Array.isArray(data.products)) throw new Error('unavailable');
+    const products = new Map(allProducts.map(p => [p.parentAsin || p.asin,p]));
+    data.products.forEach(p => { if(!products.has(p.parentAsin || p.asin)) products.set(p.parentAsin || p.asin,p); });
+    allProducts = [...products.values()];
+    expiresAt = Math.min(expiresAt, offersExpireAt(data.fetchedAt));
+    if (allProducts.length && expireOffers()) return;
+    clearTimeout(expiryTimer);
+    if (allProducts.length) expiryTimer = setTimeout(expireOffers, Math.max(0, expiresAt - Date.now()));
+    currentPage = nextPage;
+    renderProductView();
+    const visible = selectProducts(allProducts, petControl.value, sortControl.value);
+    productStatus.hidden = data.products.length > 0 && visible.length > 0;
+    productStatus.textContent = visible.length ? 'Auf dieser Ergebnisseite sind keine weiteren passenden Angebote verfügbar.' : 'Für diese Auswahl sind derzeit keine passenden Angebote verfügbar. Wähle eine andere Kategorie oder Tierauswahl.';
+    moreButton.hidden = !data.hasMore;
+    moreButton.textContent = 'Weitere Angebote laden';
+    amazonNotice.textContent = data.notice + (data.fetchedAt ? ` Stand: ${new Date(data.fetchedAt).toLocaleString('de-DE')}.` : '');
   } catch (error) {
-    productGrid.replaceChildren();
+    if (error.name === 'AbortError' || ownGeneration !== generation) return;
     productStatus.className = 'product-status unavailable';
-    productStatus.textContent = 'Live-Produkte sind momentan nicht verfügbar. Es werden keine Preise aus einem früheren Abruf angezeigt.';
-    productCount.textContent = 'Live-Abruf nicht verfügbar';
+    productStatus.textContent = 'Die Angebote konnten gerade nicht geladen werden. Bitte versuche es erneut oder wähle eine andere Kategorie.';
+    moreButton.hidden = false;
+    moreButton.textContent = 'Erneut versuchen';
+  } finally {
+    if (ownGeneration === generation) {
+      moreButton.disabled = false;
+      productGrid.setAttribute('aria-busy', 'false');
+    }
   }
 }
-
 loadAmazonProducts();
+
+}
