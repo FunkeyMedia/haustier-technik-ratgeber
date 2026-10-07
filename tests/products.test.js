@@ -179,8 +179,10 @@ test('temporary item throttling retries once, while empty item data can recover 
   const amazon = require('../lib/amazon');
   const previousId = process.env.AMAZON_CREATORS_CLIENT_ID;
   const previousSecret = process.env.AMAZON_CREATORS_CLIENT_SECRET;
+  const previousTag = process.env.AMAZON_CREATORS_PARTNER_TAG;
   process.env.AMAZON_CREATORS_CLIENT_ID = 'synthetic-test-id';
   process.env.AMAZON_CREATORS_CLIENT_SECRET = 'synthetic-test-secret';
+  process.env.AMAZON_CREATORS_PARTNER_TAG = 'Onlinestarkei-21';
   resetCaches();
   let calls = 0;
   const fakeFetch = async (url) => {
@@ -199,6 +201,7 @@ test('temporary item throttling retries once, while empty item data can recover 
   } finally {
     if (previousId === undefined) delete process.env.AMAZON_CREATORS_CLIENT_ID; else process.env.AMAZON_CREATORS_CLIENT_ID = previousId;
     if (previousSecret === undefined) delete process.env.AMAZON_CREATORS_CLIENT_SECRET; else process.env.AMAZON_CREATORS_CLIENT_SECRET = previousSecret;
+    if (previousTag === undefined) delete process.env.AMAZON_CREATORS_PARTNER_TAG; else process.env.AMAZON_CREATORS_PARTNER_TAG = previousTag;
     resetCaches();
   }
 });
