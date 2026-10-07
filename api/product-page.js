@@ -48,6 +48,10 @@ module.exports = async function handler(request, response) {
       if (known) response.setHeader('Retry-After', '1800');
       return response.status(known ? 503 : 404).send('Für dieses Modell sind momentan keine vollständigen Produktdaten verfügbar. Bitte versuche es später erneut.');
     }
+    if (slug !== product.asin) {
+      response.setHeader('Location', `/produkt/${product.asin}`);
+      return response.status(308).send('Weiterleitung zur bevorzugten Produktadresse.');
+    }
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=300');
     response.setHeader('X-Content-Type-Options', 'nosniff');
