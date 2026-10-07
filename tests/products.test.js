@@ -174,3 +174,51 @@ test('LEADTIME does not claim in-stock or preorder availability in product schem
  product.availability.type='IN_STOCK';
  assert.match(productPage.page(product),/https:\/\/schema.org\/InStock/);
 });
+
+test('temporary item throttling retries once, while empty item data can recover immediately', async () => {
+  const amazon = require('../lib/amazon');
+  const previousId = process.env.AMAZON_CREATORS_CLIENT_ID;
+  const previousSecret = process.env.AMAZON_CREATORS_CLIENT_SECRET;
+  process.env.AMAZON_CREATORS_CLIENT_ID = 'synthetic-test-id';
+  process.env.AMAZON_CREATORS_CLIENT_SECRET = 'synthetic-test-secret';
+  resetCaches();
+  let calls = 0;
+  const fakeFetch = async (url) => {
+    if (url.includes('/auth/')) return {ok: true, json: async () => ({access_token: 'synthetic-token', expires_in: 3600})};
+    calls++;
+    if (calls === 1) return {ok: false, status: 429};
+    return {ok: true, status: 200, json: async () => ({itemsResult: {items: calls === 2 ? [] : [apiItem()]}})};
+  };
+  try {
+    assert.equal(await amazon.loadProductByAsin('B012345678', fakeFetch), null);
+    assert.equal(calls, 2);
+    assert.equal((await amazon.loadProductByAsin('B012345678', fakeFetch)).asin, 'B012345678');
+    assert.equal(calls, 3);
+    assert.equal((await amazon.loadProductByAsin('B012345678', fakeFetch)).asin, 'B012345678');
+    assert.equal(calls, 3);
+  } finally {
+    if (previousId === undefined) delete process.env.AMAZON_CREATORS_CLIENT_ID; else process.env.AMAZON_CREATORS_CLIENT_ID = previousId;
+    if (previousSecret === undefined) delete process.env.AMAZON_CREATORS_CLIENT_SECRET; else process.env.AMAZON_CREATORS_CLIENT_SECRET = previousSecret;
+    resetCaches();
+  }
+});
+
+test('a valid product alias redirects to its canonical ASIN URL', async () => {
+  const amazon = require('../lib/amazon');
+  const originalLoader = amazon.loadProductByAsin;
+  const pagePath = require.resolve('../api/product-page');
+  const originalModule = require.cache[pagePath];
+  amazon.loadProductByAsin = async () => mapItem(apiItem(), search);
+  delete require.cache[pagePath];
+  try {
+    const route = require('../api/product-page');
+    let status;
+    const headers = {};
+    await route({query: {slug: 'b012345678-product-name'}}, {setHeader(k,v) {headers[k]=v;}, status(code) {status=code;return this;}, send() {}});
+    assert.equal(status, 308);
+    assert.equal(headers.Location, '/produkt/B012345678');
+  } finally {
+    amazon.loadProductByAsin = originalLoader;
+    require.cache[pagePath] = originalModule;
+  }
+});
