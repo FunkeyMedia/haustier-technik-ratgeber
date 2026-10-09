@@ -84,10 +84,13 @@ test('category media refuses write requests before touching Amazon',async()=>{
  await handler({method:'POST'},{setHeader(){},status(code){status=code;return this;},json(){}});
  assert.equal(status,405);
 });
-test('sitemap retains all legacy product identities and legal routes',()=>{
+test('sitemap retains legacy product identities while legal pages remain accessible and noindex',()=>{
  const fs=require('fs');const legacy=require('../data/legacy-product-asins.json');
  const sitemap=fs.readFileSync('sitemap.xml','utf8');
  assert.equal(legacy.length,100);
  for(const asin of legacy)assert.ok(sitemap.includes(`/produkt/${asin}</loc>`));
- for(const route of ['impressum','datenschutz'])assert.ok(sitemap.includes(`/${route}</loc>`));
+ for(const route of ['impressum','datenschutz']){
+  assert.ok(!sitemap.includes(`/${route}</loc>`));
+  assert.match(fs.readFileSync(`${route}.html`,'utf8'), /content="noindex,follow"/);
+ }
 });
