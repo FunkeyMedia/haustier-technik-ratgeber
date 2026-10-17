@@ -31,5 +31,5 @@
     }
   ],
   "outputDirectory": "public",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build && node scripts/install-amazon-click-tracking.mjs public"
 }
