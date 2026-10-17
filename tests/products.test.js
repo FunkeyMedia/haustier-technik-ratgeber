@@ -21,7 +21,7 @@ function apiItem(overrides = {}) {
   return {
     asin: 'B012345678',
     parentASIN: 'B087654321',
-    detailPageURL: 'https://www.amazon.de/dp/B012345678?tag=onlinestarkei-21',
+    detailPageURL: 'https://www.amazon.de/dp/B012345678?tag=fkm-haustiertechnik-21',
     images: { primary: { large: { url: 'https://m.media-amazon.com/images/I/example.jpg' } } },
     itemInfo: {
       title: { displayValue: 'Amazon API Testprodukt' },
@@ -70,7 +70,7 @@ test('6 und 9: jeder Link führt zur ASIN auf Amazon.de und enthält exakt die f
   assert.equal(url.hostname, 'www.amazon.de');
   assert.equal(url.pathname, '/dp/B012345678');
   assert.deepEqual(url.searchParams.getAll('tag'), [PARTNER_TAG]);
-  assert.equal(PARTNER_TAG, 'onlinestarkei-21');
+  assert.equal(PARTNER_TAG, 'fkm-haustiertechnik-21');
 });
 
 function projectFiles(directory) {
@@ -149,7 +149,7 @@ test('SEO-Produktseite enthält strukturierte Live-Produktdaten und sichere Werb
   assert.match(html, /<title>Amazon API Testprodukt/);
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /39,99 €/);
-  assert.match(html, /tag=onlinestarkei-21/);
+  assert.match(html, /tag=fkm-haustiertechnik-21/);
   assert.match(html, /rel="nofollow sponsored noopener"/);
   assert.doesNotMatch(html, /Bewertung|Sterne|ratingValue/i);
 });
@@ -182,7 +182,7 @@ test('temporary item throttling retries once, while empty item data can recover 
   const previousTag = process.env.AMAZON_CREATORS_PARTNER_TAG;
   process.env.AMAZON_CREATORS_CLIENT_ID = 'synthetic-test-id';
   process.env.AMAZON_CREATORS_CLIENT_SECRET = 'synthetic-test-secret';
-  process.env.AMAZON_CREATORS_PARTNER_TAG = 'onlinestarkei-21';
+  process.env.AMAZON_CREATORS_PARTNER_TAG = 'fkm-haustiertechnik-21';
   resetCaches();
   let calls = 0;
   const fakeFetch = async (url) => {
